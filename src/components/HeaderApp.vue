@@ -54,7 +54,7 @@ onMounted(() => {
             Início
           </div>
         </RouterLink>
-        <RouterLink @click="activate({ name: 'orders' })" :to="{ name: 'dashboard' }">
+        <RouterLink @click="activate({ name: 'orders' })" :to="{ name: 'orders' }">
           <div :class="`flex items-center gap-1.5 ${setActive(active.orders)}`">
             <UtensilsCrossed class="h-4 w-4" />
             Pedidos
