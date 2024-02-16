@@ -83,6 +83,16 @@ const getOrders = async () => {
   orders.value = data.orders
 }
 
+const handleCleanFilters = async () => {
+  filters.value = {
+    status: '',
+    orderId: '',
+    customerName: ''
+  }
+
+  await getOrders()
+}
+
 onMounted(async () => {
   await getOrders()
 })
@@ -91,7 +101,7 @@ onMounted(async () => {
 <template>
   <div class="flex flex-col items-start justify-center px-8 py-6 gap-5">
     <h1 class="text-3xl font-bold tracking-tight mb-0.5">Pedidos</h1>
-    <form @submit.prevent.stop="" class="flex items-center mt-3.5 gap-2">
+    <form @submit.prevent.stop="getOrders" class="flex items-center mt-3.5 gap-2">
       <span class="text-sm font-semibold">Filtros:</span>
       <Input
         v-model:model-value="filters.orderId"
@@ -119,7 +129,7 @@ onMounted(async () => {
         Filtrar Resultados
       </Button>
 
-      <Button variant="outline" class="text-white h-8 p-2">
+      <Button @click="handleCleanFilters" variant="outline" class="text-white h-8 p-2">
         <X class="h-4 w-4 mr-2" />
         Remover Filtros
       </Button>
