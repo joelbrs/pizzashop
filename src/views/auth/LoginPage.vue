@@ -1,10 +1,16 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+import { LoginApi, RestaurantApi } from '@/services'
 import { Pizza } from 'lucide-vue-next'
+import { useNotify } from '@/plugins/toast-notify'
 import SignInForm from './forms/SignInForm.vue'
 import SignUpForm from './forms/SignUpForm.vue'
 import TabsField from '@/components/TabsField.vue'
 import type { Tab } from '@/components/TabsField.vue'
+
+const $notify = useNotify()
+
+const loading = ref(false)
 
 const signInForm = ref({
   email: ''
@@ -31,6 +37,26 @@ const tabs: Tab[] = [
     description: 'Seja um parceiro e comece suas vendas!'
   }
 ]
+
+const signIn = async () => {
+  loading.value = true
+  const { error } = await LoginApi.postAuthenticate(signInForm.value)
+  loading.value = false
+
+  if (error) return $notify.error('Credenciais Inválidas!')
+
+  $notify.ok('Enviamos um link de autenticação para seu e-mail.')
+}
+
+const signUp = async () => {
+  loading.value = true
+  const { error } = await RestaurantApi.createRestaurant(signUpForm.value)
+  loading.value = false
+
+  if (error) return $notify.error('Credenciais Inválidas!')
+
+  $notify.ok()
+}
 </script>
 
 <template>
@@ -45,10 +71,10 @@ const tabs: Tab[] = [
     <div class="flex items-center justify-center w-[50%] h-screen">
       <TabsField :tabs="tabs">
         <template #content-sign-in>
-          <SignInForm v-model:model-value="signInForm" @sign-in="() => {}" />
+          <SignInForm v-model:model-value="signInForm" @sign-in="signIn" />
         </template>
         <template #content-sign-up>
-          <SignUpForm v-model:model-value="signUpForm" @sign-up="() => {}" />
+          <SignUpForm v-model:model-value="signUpForm" @sign-up="signUp" />
         </template>
       </TabsField>
     </div>

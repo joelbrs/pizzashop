@@ -4,7 +4,7 @@ import { useRouter } from 'vue-router'
 const $router = useRouter()
 
 const config: CreateAxiosDefaults = {
-  baseURL: import.meta.env.VIE_API_BASE_URL,
+  baseURL: import.meta.env.VITE_API_BASE_URL,
   headers: {
     'Content-Type': 'application/json',
     Accept: 'application/json'

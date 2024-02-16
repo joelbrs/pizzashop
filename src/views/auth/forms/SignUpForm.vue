@@ -53,7 +53,7 @@ watch(
     </div>
     <div class="flex flex-col items-center justify-center mt-5 text-center">
       <Button class="w-full" type="submit">Finalizar Cadastro</Button>
-      <p class="px-2 text-sm text-muted-foreground mt-2">
+      <p class="px-2 text-xs text-muted-foreground mt-2">
         Ao continuar, você concorda com nossos
         <RouterLink class="underline underline-offset-4" :to="{ name: 'login' }">
           termos de serviço
