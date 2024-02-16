@@ -9,6 +9,10 @@ const $emits = defineEmits<{
   (e: 'update:modelValue', value: Object): void
 }>()
 
+defineProps<{
+  loading: boolean
+}>()
+
 const form = ref({
   email: '',
   managerName: '',
@@ -36,15 +40,22 @@ watch(
           id="establishment"
           v-model:model-value="form.restaurantName"
           placeholder="Nome do Estabelecimento"
+          required
         />
       </div>
       <div>
         <Label for="name">Nome</Label>
-        <Input id="name" v-model:model-value="form.managerName" placeholder="Nome" />
+        <Input id="name" v-model:model-value="form.managerName" placeholder="Nome" required />
       </div>
       <div>
         <Label for="email">E-mail</Label>
-        <Input id="email" v-model:model-value="form.email" placeholder="E-mail" />
+        <Input
+          id="email"
+          v-model:model-value="form.email"
+          placeholder="E-mail"
+          type="email"
+          required
+        />
       </div>
       <div>
         <Label for="phone">Celular</Label>
@@ -52,7 +63,9 @@ watch(
       </div>
     </div>
     <div class="flex flex-col items-center justify-center mt-5 text-center">
-      <Button class="w-full" type="submit">Finalizar Cadastro</Button>
+      <Button :loading="loading" :disabled="loading" class="w-full" type="submit">
+        Finalizar Cadastro
+      </Button>
       <p class="px-2 text-xs text-muted-foreground mt-2">
         Ao continuar, você concorda com nossos
         <RouterLink class="underline underline-offset-4" :to="{ name: 'login' }">

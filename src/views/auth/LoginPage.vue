@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import { LoginApi, RestaurantApi } from '@/services'
 import { Pizza } from 'lucide-vue-next'
 import { useNotify } from '@/plugins/toast-notify'
@@ -11,6 +11,8 @@ import type { Tab } from '@/components/TabsField.vue'
 const $notify = useNotify()
 
 const loading = ref(false)
+
+const tab = ref('sign-in')
 
 const signInForm = ref({
   email: ''
@@ -56,7 +58,30 @@ const signUp = async () => {
   if (error) return $notify.error('Credenciais Inválidas!')
 
   $notify.ok()
+  tab.value = 'sign-in'
 }
+
+const cleanFields = () => {
+  signInForm.value = {
+    email: ''
+  }
+
+  signUpForm.value = {
+    email: '',
+    managerName: '',
+    phone: '',
+    restaurantName: ''
+  }
+}
+
+watch(
+  () => tab.value,
+  (newValue) => {
+    if (newValue) {
+      cleanFields()
+    }
+  }
+)
 </script>
 
 <template>
@@ -69,12 +94,12 @@ const signUp = async () => {
       <footer class="text-sm">Painel do parceiro © pizza.shop - 2024</footer>
     </div>
     <div class="flex items-center justify-center w-[50%] h-screen">
-      <TabsField :tabs="tabs">
+      <TabsField v-model:model-value="tab" :tabs="tabs">
         <template #content-sign-in>
-          <SignInForm v-model:model-value="signInForm" @sign-in="signIn" />
+          <SignInForm v-model:model-value="signInForm" :loading="loading" @sign-in="signIn" />
         </template>
         <template #content-sign-up>
-          <SignUpForm v-model:model-value="signUpForm" @sign-up="signUp" />
+          <SignUpForm v-model:model-value="signUpForm" :loading="loading" @sign-up="signUp" />
         </template>
       </TabsField>
     </div>

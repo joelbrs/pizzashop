@@ -9,6 +9,10 @@ const $emits = defineEmits<{
   (e: 'update:modelValue', value: Object): void
 }>()
 
+defineProps<{
+  loading: boolean
+}>()
+
 const form = ref({
   email: ''
 })
@@ -27,10 +31,12 @@ watch(
 <template>
   <form @submit.prevent.stop="$emit('sign-in')">
     <Label for="email">E-mail</Label>
-    <Input id="email" v-model:model-value="form.email" placeholder="E-mail" />
+    <Input id="email" type="email" required v-model:model-value="form.email" placeholder="E-mail" />
 
     <div class="flex items-center justify-center mt-5">
-      <Button type="submit" class="w-full">Acessar Painel</Button>
+      <Button :loading="loading" :disabled="loading" type="submit" class="w-full">
+        Acessar Painel
+      </Button>
     </div>
   </form>
 </template>
