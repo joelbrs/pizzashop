@@ -21,10 +21,10 @@ $axios.interceptors.request.use(
 
 $axios.interceptors.response.use(
   (response) => response,
-  (error) => {
+  async (error) => {
+    console.log(error)
     if (error.response.status === 401) {
-      //TODO: implement log out
-      $router.push({ name: 'login' })
+      window.location.href = '/login'
     }
   }
 )

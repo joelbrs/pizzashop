@@ -1,9 +1,44 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { h, onMounted, ref } from 'vue'
+import { Search, X } from 'lucide-vue-next'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
+import type { Order } from '@/@types'
+import { OrderApi } from '@/services'
+import DataTable from '@/components/DataTable.vue'
+import type { ColumnDef } from '@tanstack/vue-table'
 import SelectField from '@/components/SelectField.vue'
-import { Search, X } from 'lucide-vue-next'
+import { useNotify } from '@/plugins/toast-notify'
+
+const $notify = useNotify()
+
+const columns: ColumnDef<any, string>[] = [
+  {
+    accessorKey: 'orderId',
+    header: 'Identificador',
+    cell: ({ row }) => h('div', { class: 'text-muted-foreground' }, row.getValue('orderId'))
+  },
+  {
+    accessorKey: 'createdAt',
+    header: 'Realizado há',
+    cell: ({ row }) => h('div', { class: 'text-muted-foreground' }, row.getValue('createdAt'))
+  },
+  {
+    accessorKey: 'status',
+    header: 'Status',
+    cell: ({ row }) => h('div', { class: 'text-muted-foreground' }, row.getValue('status'))
+  },
+  {
+    accessorKey: 'customerName',
+    header: 'Cliente',
+    cell: ({ row }) => h('div', { class: 'text-muted-foreground' }, row.getValue('customerName'))
+  },
+  {
+    accessorKey: 'total',
+    header: 'Total do Pedido',
+    cell: ({ row }) => h('div', { class: 'text-muted-foreground' }, row.getValue('total'))
+  }
+]
 
 const status = [
   {
@@ -33,14 +68,28 @@ const status = [
 ]
 
 const filters = ref({
-  status: status[0].id,
+  status: '',
   orderId: '',
   customerName: ''
+})
+
+const orders = ref<Order[]>([])
+
+const getOrders = async () => {
+  const { data, error } = await OrderApi.getOrders({ pageIndex: 0 })
+
+  if (error) return $notify.error('Erro ao carregar os pedidos.')
+
+  orders.value = data.orders
+}
+
+onMounted(async () => {
+  await getOrders()
 })
 </script>
 
 <template>
-  <div class="flex flex-col items-start justify-center px-8 py-6">
+  <div class="flex flex-col items-start justify-center px-8 py-6 gap-5">
     <h1 class="text-3xl font-bold tracking-tight mb-0.5">Pedidos</h1>
     <form @submit.prevent.stop="" class="flex items-center mt-3.5 gap-2">
       <span class="text-sm font-semibold">Filtros:</span>
@@ -75,5 +124,9 @@ const filters = ref({
         Remover Filtros
       </Button>
     </form>
+
+    <div class="w-full">
+      <DataTable :columns="columns" :data="orders" />
+    </div>
   </div>
 </template>
