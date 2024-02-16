@@ -32,6 +32,10 @@ const router = createRouter({
 router.beforeEach(async (to) => {
   const $loginStore = useLoginStore()
 
+  if (to.name === 'root' || !to.name) {
+    return { name: 'dashboard' }
+  }
+
   if (to.name !== 'login') {
     await $loginStore.SET_LOGGED_USER()
 
