@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { h, onMounted, ref } from 'vue'
+import { computed, h, onMounted, ref } from 'vue'
 import { Search, X } from 'lucide-vue-next'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
@@ -16,7 +16,7 @@ const columns: ColumnDef<any, string>[] = [
   {
     accessorKey: 'orderId',
     header: 'Identificador',
-    cell: ({ row }) => h('div', { class: 'text-muted-foreground' }, row.getValue('orderId'))
+    cell: ({ row }) => h('div', { class: 'font-mono text-xs font-medium' }, row.getValue('orderId'))
   },
   {
     accessorKey: 'createdAt',
@@ -31,12 +31,12 @@ const columns: ColumnDef<any, string>[] = [
   {
     accessorKey: 'customerName',
     header: 'Cliente',
-    cell: ({ row }) => h('div', { class: 'text-muted-foreground' }, row.getValue('customerName'))
+    cell: ({ row }) => h('div', { class: 'font-medium' }, row.getValue('customerName'))
   },
   {
     accessorKey: 'total',
     header: 'Total do Pedido',
-    cell: ({ row }) => h('div', { class: 'text-muted-foreground' }, row.getValue('total'))
+    cell: ({ row }) => h('div', { class: 'text-medium' }, Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(row.getValue('total')))
   }
 ]
 
@@ -73,10 +73,24 @@ const filters = ref({
   customerName: ''
 })
 
+const loading = ref(false)
 const orders = ref<Order[]>([])
 
+const disableCleanFilter = computed(() => {
+  return !Object.keys(filters.value).find(filter => filters.value[filter as keyof typeof filters.value])
+})
+
 const getOrders = async () => {
-  const { data, error } = await OrderApi.getOrders({ pageIndex: 0 })
+  const params = {
+    status: filters.value.status || null,
+    orderId: filters.value.orderId || null,
+    customerName: filters.value.customerName || null,
+    pageIndex: 0
+  }
+
+  loading.value = true
+  const { data, error } = await OrderApi.getOrders({ ...params })
+  loading.value = false
 
   if (error) return $notify.error('Erro ao carregar os pedidos.')
 
@@ -99,9 +113,9 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="flex flex-col items-start justify-center px-8 py-6 gap-5">
-    <h1 class="text-3xl font-bold tracking-tight mb-0.5">Pedidos</h1>
-    <form @submit.prevent.stop="getOrders" class="flex items-center mt-3.5 gap-2">
+  <div class="flex flex-col items-start justify-center px-8 py-6 gap-2">
+    <h1 class="text-3xl font-bold tracking-tight">Pedidos</h1>
+    <form @submit.prevent.stop="getOrders" class="flex items-center gap-2 mt-2">
       <span class="text-sm font-semibold">Filtros:</span>
       <Input
         v-model:model-value="filters.orderId"
@@ -124,12 +138,12 @@ onMounted(async () => {
         />
       </div>
 
-      <Button type="submit" class="bg-muted hover:bg-primary-foreground text-white h-8 p-2">
+      <Button type="submit" :loading="loading" :disabled="loading" class="bg-muted hover:bg-primary-foreground text-white h-8 p-2">
         <Search class="h-4 w-4 mr-2" />
         Filtrar Resultados
       </Button>
 
-      <Button @click="handleCleanFilters" variant="outline" class="text-white h-8 p-2">
+      <Button @click="handleCleanFilters" :disabled="disableCleanFilter" variant="outline" class="text-white h-8 p-2">
         <X class="h-4 w-4 mr-2" />
         Remover Filtros
       </Button>
