@@ -2,7 +2,7 @@
 import { onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import ThemeToggle from '@/components/theme/ThemeToggle.vue'
-import BtnUser from '@/components/BtnUser.vue'
+import BtnUser from '@/components/btn-user.vue'
 import { Separator } from '@/components/ui/separator'
 import { Pizza, Home, UtensilsCrossed } from 'lucide-vue-next'
 

@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue'
 import { Search, X } from 'lucide-vue-next'
-import PaginationApp from '@/components/PaginationApp.vue'
+import PaginationApp from '@/components/pagination-app.vue'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { PaginationModel, type Order, type Pagination}  from '@/@types'
 import { OrderApi } from '@/services'
 import OrdersTable from './orders-table.vue'
-import SelectField from '@/components/SelectField.vue'
+import SelectField from '@/components/select-field.vue'
 import { useNotify } from '@/plugins/toast-notify'
 
 const $notify = useNotify()
@@ -68,7 +68,7 @@ const getOrders = async () => {
   if (error) return $notify.error('Erro ao carregar os pedidos.')
 
   orders.value = data.orders
-  pagination.value = data.meta
+  pagination.value = new PaginationModel(data.meta)
 }
 
 const handlePagination = async ($event: number) => {

@@ -8,7 +8,7 @@ import {
   PaginationPrev,
 } from '@/components/ui/pagination'
 import { computed, onMounted, ref } from 'vue'
-import type { Pagination as IPagination } from '@/@types';
+import { PaginationModel, type Pagination as IPagination } from '@/@types';
 
 interface Props {
   pagination?: IPagination
@@ -16,11 +16,7 @@ interface Props {
 }
 
 const props = withDefaults(defineProps<Props>(),{
-  pagination: {
-    pageIndex: 0,
-    perPage: 10,
-    totalCount: 0,
-  }
+  pagination: new PaginationModel()
 })
 
 const page = ref(1)
