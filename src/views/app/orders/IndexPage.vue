@@ -1,44 +1,16 @@
 <script setup lang="ts">
-import { computed, h, onMounted, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { Search, X } from 'lucide-vue-next'
+import PaginationApp from '@/components/PaginationApp.vue'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
-import type { Order } from '@/@types'
+import { PaginationModel, type Order, type Pagination}  from '@/@types'
 import { OrderApi } from '@/services'
-import DataTable from '@/components/DataTable.vue'
-import type { ColumnDef } from '@tanstack/vue-table'
+import OrdersTable from './orders-table.vue'
 import SelectField from '@/components/SelectField.vue'
 import { useNotify } from '@/plugins/toast-notify'
 
 const $notify = useNotify()
-
-const columns: ColumnDef<any, string>[] = [
-  {
-    accessorKey: 'orderId',
-    header: 'Identificador',
-    cell: ({ row }) => h('div', { class: 'font-mono text-xs font-medium' }, row.getValue('orderId'))
-  },
-  {
-    accessorKey: 'createdAt',
-    header: 'Realizado há',
-    cell: ({ row }) => h('div', { class: 'text-muted-foreground' }, row.getValue('createdAt'))
-  },
-  {
-    accessorKey: 'status',
-    header: 'Status',
-    cell: ({ row }) => h('div', { class: 'text-muted-foreground' }, row.getValue('status'))
-  },
-  {
-    accessorKey: 'customerName',
-    header: 'Cliente',
-    cell: ({ row }) => h('div', { class: 'font-medium' }, row.getValue('customerName'))
-  },
-  {
-    accessorKey: 'total',
-    header: 'Total do Pedido',
-    cell: ({ row }) => h('div', { class: 'text-medium' }, Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(row.getValue('total')))
-  }
-]
 
 const status = [
   {
@@ -74,6 +46,7 @@ const filters = ref({
 })
 
 const loading = ref(false)
+const pagination = ref<Pagination>(new PaginationModel())
 const orders = ref<Order[]>([])
 
 const disableCleanFilter = computed(() => {
@@ -82,10 +55,10 @@ const disableCleanFilter = computed(() => {
 
 const getOrders = async () => {
   const params = {
-    status: filters.value.status || null,
+    status: filters.value.status && filters.value.status !== 'all' || null,
     orderId: filters.value.orderId || null,
     customerName: filters.value.customerName || null,
-    pageIndex: 0
+    pageIndex: pagination.value.pageIndex
   }
 
   loading.value = true
@@ -95,6 +68,13 @@ const getOrders = async () => {
   if (error) return $notify.error('Erro ao carregar os pedidos.')
 
   orders.value = data.orders
+  pagination.value = data.meta
+}
+
+const handlePagination = async ($event: number) => {
+  pagination.value.pageIndex = $event
+
+  await getOrders()
 }
 
 const handleCleanFilters = async () => {
@@ -149,8 +129,11 @@ onMounted(async () => {
       </Button>
     </form>
 
-    <div class="w-full">
-      <DataTable :columns="columns" :data="orders" />
+    <div class="w-full flex flex-col gap-2 ">
+      <OrdersTable :orders="orders" />
+      <div class="self-end w-full">
+        <PaginationApp :pagination="pagination" :handle-pagination="handlePagination"/>
+      </div>
     </div>
   </div>
 </template>
