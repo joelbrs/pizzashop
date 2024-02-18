@@ -151,7 +151,7 @@ onMounted(async () => {
       <h1 class="text-3xl font-bold tracking-tight">Pedidos</h1>
       <Loader2 v-if="loading" class="w-5 h-5 animate-spin" />
     </div>
-    <form @submit.prevent.stop="getOrders" class="flex items-center gap-2 mt-2">
+    <form @submit.prevent.stop="getOrders" class="flex items-center gap-2 mt-3">
       <span class="text-sm font-semibold">Filtros:</span>
       <Input
         v-model:model-value="filters.orderId"
@@ -185,7 +185,7 @@ onMounted(async () => {
       </Button>
     </form>
 
-    <div class="w-full flex flex-col gap-2 ">
+    <div class="w-full flex flex-col gap-2 mt-1">
       <OrdersTable @handle-order="handleOrder($event)" :orders="orders" />
       <div class="self-end w-full">
         <PaginationApp :pagination="pagination" @handle-pagination="handlePagination($event)"/>

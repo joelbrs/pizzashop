@@ -9,7 +9,9 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { Button } from '@/components/ui/button'
+import OrderDetails from './order-details.vue';
 import { ArrowRight, Search } from 'lucide-vue-next'
+import OrderStatus from '@/components/order-status.vue'
 
 defineProps<{
   orders: Order[]
@@ -17,18 +19,6 @@ defineProps<{
 
 const disableCancelBtn = ({status}: Order) => {
   return status === 'delivered' || status === 'canceled'
-}
-
-const setStatus = ({status}: Order) => {
-  const stts = {
-    pending: {name: 'Pendente', color: 'bg-slate-400'},
-    processing: {name: 'Em preparo', color: 'bg-amber-500'},
-    delivering: {name: 'Em entrega', color: 'bg-amber-500'},
-    delivered: { name: 'Entregue', color: 'bg-green-500' },
-    canceled: {name: 'Cancelado', color: 'bg-red-500'}
-  }
-
-  return stts[status]
 }
 </script>
 
@@ -52,23 +42,18 @@ const setStatus = ({status}: Order) => {
           <TableRow v-for="order in orders" :key="order.orderId">
             <TableCell class="px-4 py-3.5 font-mono text-xs font-medium w-[10vw]">
               <div class="flex items-center gap-8">
-                <Button class="bg-background hover:bg-accent text-sm font-medium border border-input text-secondary-foreground hover:text-accent-foreground h-8 rounded-md px-2.5">
-                  <Search class="w-3 h-3"/>
-                </Button>
+                <OrderDetails :id="order.orderId"/>
                 {{ order.orderId }}
               </div>
             </TableCell>
             <TableCell class="px-6 py-3.5 text-muted-foreground w-[10vw]">{{ order.createdAt }}</TableCell>
             <TableCell class="px-6 py-3.5 text-muted-foreground  w-[7vw]">
-              <div class="flex items-center gap-2">
-                <span :class="`h-2 w-2 rounded-full ${setStatus(order).color}`"></span>
-                {{ setStatus(order).name }}
-              </div>
+              <OrderStatus :status="order.status" />
             </TableCell>
             <TableCell class="px-6 py-3.5 font-medium w-[45vw]">{{ order.customerName }}</TableCell>
             <TableCell class="px-6 py-3.5 font-medium w-[8vw]">
               <div class="flex flex-col">
-                <div>{{ Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(order.total) }}</div>
+                <div>{{ Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(order.total / 100) }}</div>
                 <div class="text-xs text-muted-foreground">3 produto(s)</div>
               </div>
             </TableCell>
@@ -79,7 +64,7 @@ const setStatus = ({status}: Order) => {
                   class="bg-background hover:bg-accent text-sm font-medium border border-input text-secondary-foreground hover:text-accent-foreground h-8 rounded-md px-2.5"
                 >
                   {{ order.status === 'pending' ? 'Aprovar' : order.status === 'processing' ? 'Em entrega' : 'Entregue'}}
-                  <ArrowRight class="w-3 h-3 ml-1" />
+                  <ArrowRight class="w-3 h-3 ml-2" />
                 </Button>
             </TableCell>
             <TableCell class=" w-[6.5vw]">
@@ -88,7 +73,7 @@ const setStatus = ({status}: Order) => {
                   :class="`${!disableCancelBtn(order) ? 'bg-background' : 'bg-transparent'} hover:bg-accent text-sm font-medium  text-secondary-foreground hover:text-accent-foreground h-8 rounded-md px-2.5`"
                   :disabled="disableCancelBtn(order)"
                 >
-                  <ArrowRight class="w-3 h-3 mr-1" />
+                  <ArrowRight class="w-3 h-3 mr-2" />
                   Cancelar
                 </Button>
             </TableCell>
