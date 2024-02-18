@@ -1,5 +1,5 @@
 import type { RestaurantDTOOut, UserDTOOut } from '@/@types'
-import { UserApi } from '@/services'
+import { LoginApi, UserApi } from '@/services'
 import { useNotify } from '@/plugins/toast-notify'
 import { defineStore } from 'pinia'
 
@@ -27,6 +27,15 @@ export const useLoginStore = defineStore('login', {
 
       if (error) return $notify.error('Erro ao consultar restaurante.')
       this.restaurant = data
+    },
+    async LOG_OUT() {
+      const { error } = await LoginApi.postLogOut()
+
+      if (error) return $notify.error('Erro ao sair da sessão.')
+
+      this.user = {} as UserDTOOut
+      this.restaurant = {} as RestaurantDTOOut
+      this.isLogged = false
     }
   }
 })

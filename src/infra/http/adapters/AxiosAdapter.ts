@@ -10,7 +10,7 @@ export default class AxiosAdapter implements HttpClient {
     return data
   }
 
-  async post<T>(url: string, body: Object): Promise<T> {
+  async post<T>(url: string, body?: Object): Promise<T> {
     const { data } = await this._client.post<T>(url, body)
     return data
   }

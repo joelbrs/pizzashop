@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
+import { useRouter } from 'vue-router'
 import { useLoginStore } from '@/stores/login'
 import { ChevronDown, Building, LogOut } from 'lucide-vue-next'
 import { Button } from '@/components/ui/button'
@@ -13,11 +14,18 @@ import {
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
 
+const $router = useRouter()
 const $loginStore = useLoginStore()
 
 const infos = computed(() => {
   return $loginStore.$state
 })
+
+const logOut = async () => {
+  await $loginStore.LOG_OUT()
+
+  await $router.push({name: 'login'})
+}
 </script>
 
 <template>
@@ -39,7 +47,7 @@ const infos = computed(() => {
           <span>Perfil da Loja</span>
         </DropdownMenuItem>
       </DropdownMenuGroup>
-      <DropdownMenuItem class="text-red-400">
+      <DropdownMenuItem @click="logOut" class="text-red-400">
         <LogOut class="mr-2 h-4 w-4" />
         <span>Sair</span>
       </DropdownMenuItem>

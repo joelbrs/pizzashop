@@ -1,8 +1,11 @@
 import HttpFactory from '@/factories/HttpFactory'
 
-const base = 'authenticate'
-const httpClient = HttpFactory(base)
+const httpClient = HttpFactory()
 
 export function postAuthenticate(params: Object) {
-  return httpClient.post<void>('', params)
+  return httpClient.post<void>('authenticate', params)
+}
+
+export function postLogOut() {
+  return httpClient.post<void>('sign-out')
 }

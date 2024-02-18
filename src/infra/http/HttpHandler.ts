@@ -23,7 +23,7 @@ export default class HttpHandler {
     }
   }
 
-  async post<T>(url: string, body: Object) {
+  async post<T>(url: string, body?: Object) {
     try {
       const data = await this._client.post<T>(this.constructUrl(url), body)
       return setDataResponse<T>(data)

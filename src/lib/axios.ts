@@ -1,7 +1,4 @@
 import axios, { type CreateAxiosDefaults } from 'axios'
-import { useRouter } from 'vue-router'
-
-const $router = useRouter()
 
 const config: CreateAxiosDefaults = {
   baseURL: import.meta.env.VITE_API_BASE_URL,
@@ -24,7 +21,7 @@ $axios.interceptors.response.use(
   async (error) => {
     console.log(error)
     if (error.response.status === 401) {
-      window.location.href = '/login'
+      window.location.href = '/sign-in'
     }
   }
 )
