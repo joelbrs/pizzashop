@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue'
-import { Search, X } from 'lucide-vue-next'
+import { Search, X, Loader2 } from 'lucide-vue-next'
 import PaginationApp from '@/components/pagination-app.vue'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
@@ -147,23 +147,26 @@ onMounted(async () => {
 
 <template>
   <div class="flex flex-col items-start justify-center px-8 py-6 gap-2">
-    <h1 class="text-3xl font-bold tracking-tight">Pedidos</h1>
+    <div class="flex items-center gap-2">
+      <h1 class="text-3xl font-bold tracking-tight">Pedidos</h1>
+      <Loader2 v-if="loading" class="w-5 h-5 animate-spin" />
+    </div>
     <form @submit.prevent.stop="getOrders" class="flex items-center gap-2 mt-2">
       <span class="text-sm font-semibold">Filtros:</span>
       <Input
         v-model:model-value="filters.orderId"
-        class="h-8 w-[12vw]"
+        class="h-8 w-[11vw]"
         placeholder="ID do Pedido"
       />
       <Input
         v-model:model-value="filters.customerName"
-        class="h-8 w-[20.75vw]"
+        class="h-8 w-[16.5vw]"
         placeholder="Nome do Cliente"
       />
       <div>
         <SelectField
           v-model:model-value="filters.status"
-          class="h-8 w-[12vw]"
+          class="h-8 w-[9.5vw]"
           label="Status"
           :items="status"
           item-value="id"
