@@ -28,6 +28,15 @@ export const useLoginStore = defineStore('login', {
       if (error) return $notify.error('Erro ao consultar restaurante.')
       this.restaurant = data
     },
+    async EDIT_PROFILE(restaurant: { name: string, description: string }) {
+      const {error} = await UserApi.putRestaurantInfos(restaurant)
+
+      if (error) return $notify.error('Erro ao atualizar informações do restaurante.')
+
+      this.restaurant.name = restaurant.name
+      this.restaurant.description = restaurant.description
+      $notify.ok()
+    },
     async LOG_OUT() {
       const { error } = await LoginApi.postLogOut()
 

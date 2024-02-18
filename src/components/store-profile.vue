@@ -13,10 +13,7 @@ import { Textarea } from '@/components/ui/textarea'
 import { Label } from '@/components/ui/label'
 import { useLoginStore } from '@/stores/login'
 import { onMounted, ref } from 'vue'
-import { UserApi } from '@/services'
-import { useNotify } from '@/plugins/toast-notify'
 
-const $notify = useNotify()
 const $loginStore = useLoginStore()
 
 const loading = ref(false)
@@ -28,14 +25,8 @@ const restaurant = ref({
 
 const saveChanges = async () => {
   loading.value = true
-  const {error} = await UserApi.putRestaurantInfos(restaurant.value)
+  await $loginStore.EDIT_PROFILE(restaurant.value)
   loading.value = false
-
-  if (error) return $notify.error('Erro ao atualizar informações do restaurante.')
-
-  $notify.ok()
-  $loginStore.restaurant.name = restaurant.value.name
-  $loginStore.restaurant.description = restaurant.value.description
 }
 
 onMounted(() => {
