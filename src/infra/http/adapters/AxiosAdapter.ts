@@ -15,6 +15,11 @@ export default class AxiosAdapter implements HttpClient {
     return data
   }
 
+  async put<T>(url: string, body?: Object): Promise<T> {
+    const { data } = await this._client.put<T>(url, body)
+    return data
+  }
+
   async patch<T>(url: string, body?: Object): Promise<T> {
     const { data } = await this._client.patch<T>(url, body)
     return data

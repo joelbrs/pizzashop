@@ -10,3 +10,7 @@ export function getLoggedUser() {
 export function getLoggedRestaurant() {
   return httpClient.get<RestaurantDTOOut>('/managed-restaurant')
 }
+
+export function putRestaurantInfos(params: Object) {
+  return httpClient.put<void>('profile', params)
+}

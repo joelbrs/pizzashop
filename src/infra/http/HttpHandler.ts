@@ -32,6 +32,15 @@ export default class HttpHandler {
     }
   }
 
+  async put<T>(url: string, body?: Object) {
+    try {
+      const data = await this._client.put<T>(this.constructUrl(url), body)
+      return setDataResponse<T>(data)
+    } catch (err) {
+      return setErrorResponse(err as Error)
+    }
+  }
+
   async patch<T>(url: string, body?: Object) {
     try {
       const data = await this._client.patch<T>(this.constructUrl(url), body)
