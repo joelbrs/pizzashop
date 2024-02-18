@@ -8,6 +8,31 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
+import { onMounted } from 'vue';
+
+type Theme = 'dark' | 'light'
+
+const toggleTheme = (theme: Theme) => {
+  const classTheme = document.querySelector('body')
+
+  if (theme === 'dark' && !classTheme?.classList.contains('dark')) {
+    classTheme?.classList.add('dark')
+  }
+  
+  if (theme === 'light' && classTheme?.classList.contains('dark')) {
+    classTheme?.classList.remove('dark')
+  }
+  localStorage.setItem('pizza-shop-theme', theme)
+}
+
+onMounted(() => {
+  const theme: string | null = localStorage.getItem('pizza-shop-theme')
+
+  if (theme) {
+    toggleTheme(theme as Theme)
+  }
+})
+
 </script>
 
 <template>
@@ -21,14 +46,11 @@ import {
     </DropdownMenuTrigger>
     <DropdownMenuContent class="relative right-11 w-30">
       <DropdownMenuGroup>
-        <DropdownMenuItem>
+        <DropdownMenuItem @click="toggleTheme('light')">
           <span>Light</span>
         </DropdownMenuItem>
-        <DropdownMenuItem>
+        <DropdownMenuItem @click="toggleTheme('dark')">
           <span>Dark</span>
-        </DropdownMenuItem>
-        <DropdownMenuItem>
-          <span>System</span>
         </DropdownMenuItem>
       </DropdownMenuGroup>
     </DropdownMenuContent>

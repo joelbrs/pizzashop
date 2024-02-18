@@ -10,7 +10,7 @@ import {
 } from '@/components/ui/table'
 import { Button } from '@/components/ui/button'
 import OrderDetails from './order-details.vue';
-import { ArrowRight, Search } from 'lucide-vue-next'
+import { ArrowRight } from 'lucide-vue-next'
 import OrderStatus from '@/components/order-status.vue'
 
 defineProps<{
@@ -57,7 +57,7 @@ const disableCancelBtn = ({status}: Order) => {
                 <div class="text-xs text-muted-foreground">3 produto(s)</div>
               </div>
             </TableCell>
-            <TableCell class="px-6 py-3.5 w-[10vw]">
+            <TableCell class="px-6 py-3.5 w-[9.5vw]">
                 <Button 
                   v-if="order.status !== 'delivered' && order.status !== 'canceled'"
                   @click.prevent.stop="$emit('handle-order', order)"
@@ -67,10 +67,10 @@ const disableCancelBtn = ({status}: Order) => {
                   <ArrowRight class="w-3 h-3 ml-2" />
                 </Button>
             </TableCell>
-            <TableCell class=" w-[6.5vw]">
+            <TableCell class="w-[6.5vw]">
               <Button 
                   @click.prevent.stop="$emit('handle-order', order)"
-                  :class="`${!disableCancelBtn(order) ? 'bg-background' : 'bg-transparent'} hover:bg-accent text-sm font-medium  text-secondary-foreground hover:text-accent-foreground h-8 rounded-md px-2.5`"
+                  :class="`bg-transparent hover:bg-accent text-sm font-medium  text-secondary-foreground hover:text-accent-foreground h-8 rounded-md px-2.5`"
                   :disabled="disableCancelBtn(order)"
                 >
                   <ArrowRight class="w-3 h-3 mr-2" />
