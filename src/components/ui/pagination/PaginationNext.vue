@@ -19,7 +19,7 @@ const delegatedProps = computed(() => {
 </script>
 
 <template>
-  <PaginationNext @click="$emit('click')" v-bind="delegatedProps">
+  <PaginationNext v-bind="delegatedProps">
     <Button :class="cn('w-9 h-9 p-0', props.class)" variant="outline">
       <slot>
         <ChevronRightIcon />

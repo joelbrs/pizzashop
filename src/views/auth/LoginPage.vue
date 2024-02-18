@@ -5,8 +5,8 @@ import { Pizza } from 'lucide-vue-next'
 import { useNotify } from '@/plugins/toast-notify'
 import SignInForm from './forms/SignInForm.vue'
 import SignUpForm from './forms/SignUpForm.vue'
-import TabsField from '@/components/TabsField.vue'
-import type { Tab } from '@/components/TabsField.vue'
+import TabsField from '@/components/tabs-field.vue'
+import type { Tab } from '@/components/tabs-field.vue'
 
 const $notify = useNotify()
 

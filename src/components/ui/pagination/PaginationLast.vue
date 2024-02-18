@@ -19,7 +19,7 @@ const delegatedProps = computed(() => {
 </script>
 
 <template>
-  <PaginationLast @click="$emit('click')" v-bind="delegatedProps">
+  <PaginationLast v-bind="delegatedProps">
     <Button :class="cn('w-9 h-9 p-0', props.class)" variant="outline">
       <slot>
         <DoubleArrowRightIcon />

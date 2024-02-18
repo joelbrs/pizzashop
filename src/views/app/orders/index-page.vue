@@ -53,11 +53,24 @@ const disableCleanFilter = computed(() => {
   return !Object.keys(filters.value).find(filter => filters.value[filter as keyof typeof filters.value])
 })
 
+const defineHandler = ({status}: Order) => {
+  const stts = {
+    pending: 'approve',
+    processing: 'dispatch',
+    delivering: 'deliver',
+    canceled: 'cancel'
+  }
+
+  return status in stts && stts[status as keyof typeof stts] || stts.canceled
+}
+
 const getOrders = async () => {
+  const { customerName, orderId, status } = filters.value
+
   const params = {
-    status: filters.value.status && filters.value.status !== 'all' || null,
-    orderId: filters.value.orderId || null,
-    customerName: filters.value.customerName || null,
+    status: status && status !== 'all' ? status : null,
+    orderId: orderId || null,
+    customerName: customerName || null,
     pageIndex: pagination.value.pageIndex
   }
 
@@ -69,6 +82,46 @@ const getOrders = async () => {
 
   orders.value = data.orders
   pagination.value = new PaginationModel(data.meta)
+}
+
+const handleOrder = async (order: Order) => {
+  const handler = defineHandler(order)
+
+  const handlers = {
+    approve: async ({orderId}: Order) => {
+      const { error } = await OrderApi.approveOrder(orderId)
+
+      if (error) return $notify.error('Erro ao aprovar pedido!')
+
+      $notify.ok('Pedido aprovado!')
+    },
+    dispatch: async ({orderId}: Order) => {
+      const { error } = await OrderApi.dispatchOrder(orderId)
+
+      if (error) return $notify.error('Erro ao despachar pedido!')
+
+      $notify.ok('Pedido despachado!')
+    },
+    deliver: async ({orderId}: Order) => {
+      const { error } = await OrderApi.deliverOrder(orderId)
+
+      if (error) return $notify.error('Erro ao entregar pedido!')
+
+      $notify.ok('Pedido entregue!')
+    },
+    cancel: async ({orderId}: Order) => {
+      const { error } = await OrderApi.cancelOrder(orderId)
+
+      if (error) return $notify.error('Erro ao cancelar pedido!')
+
+      $notify.ok('Pedido Cancelado!')
+    }
+  }
+
+  if (handler in handlers) {
+    handlers[handler as keyof typeof handlers](order)
+    await getOrders()
+  }
 }
 
 const handlePagination = async ($event: number) => {
@@ -119,7 +172,7 @@ onMounted(async () => {
       </div>
 
       <Button type="submit" :loading="loading" :disabled="loading" class="bg-muted hover:bg-primary-foreground text-white h-8 p-2">
-        <Search class="h-4 w-4 mr-2" />
+        <Search v-if="!loading" class="h-4 w-4 mr-2" />
         Filtrar Resultados
       </Button>
 
@@ -130,9 +183,9 @@ onMounted(async () => {
     </form>
 
     <div class="w-full flex flex-col gap-2 ">
-      <OrdersTable :orders="orders" />
+      <OrdersTable @handle-order="handleOrder($event)" :orders="orders" />
       <div class="self-end w-full">
-        <PaginationApp :pagination="pagination" :handle-pagination="handlePagination"/>
+        <PaginationApp :pagination="pagination" @handle-pagination="handlePagination($event)"/>
       </div>
     </div>
   </div>

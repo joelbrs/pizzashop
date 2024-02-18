@@ -11,8 +11,7 @@ import { computed, onMounted, ref } from 'vue'
 import { PaginationModel, type Pagination as IPagination } from '@/@types';
 
 interface Props {
-  pagination?: IPagination
-  handlePagination: (page: number) => Promise<void>
+  pagination?: any
 }
 
 const props = withDefaults(defineProps<Props>(),{
@@ -37,10 +36,10 @@ onMounted(() => {
         <div class="text-sm text-muted-foreground">Total de {{ pagination.totalCount }} item(s)</div>
         <div class="text-sm font-medium mt-1 mr-2">Página {{ page }} de {{ totalPages }}</div>
       </div>
-      <PaginationFirst @click="handlePagination(0)" />
-      <PaginationPrev @click="handlePagination(props.pagination.pageIndex - 1)"/>
-      <PaginationNext @click="handlePagination(props.pagination.pageIndex + 1)"/>
-      <PaginationLast @click="handlePagination(totalPages - 1)"/>
+      <PaginationFirst @click="$emit('handle-pagination', (0))" />
+      <PaginationPrev @click="$emit('handle-pagination', (props.pagination.pageIndex - 1))"/>
+      <PaginationNext @click="$emit('handle-pagination', (props.pagination.pageIndex + 1))"/>
+      <PaginationLast @click="$emit('handle-pagination', (totalPages - 1))"/>
     </PaginationList>
   </Pagination>
 </template>

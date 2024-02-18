@@ -31,4 +31,13 @@ export default class HttpHandler {
       return setErrorResponse(err as Error)
     }
   }
+
+  async patch<T>(url: string, body?: Object) {
+    try {
+      const data = await this._client.patch<T>(this.constructUrl(url), body)
+      return setDataResponse<T>(data)
+    } catch (err) {
+      return setErrorResponse(err as Error)
+    }
+  }
 }

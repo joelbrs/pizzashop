@@ -14,4 +14,9 @@ export default class AxiosAdapter implements HttpClient {
     const { data } = await this._client.post<T>(url, body)
     return data
   }
+
+  async patch<T>(url: string, body?: Object): Promise<T> {
+    const { data } = await this._client.patch<T>(url, body)
+    return data
+  }
 }
