@@ -21,7 +21,8 @@ import { OrderApi } from '@/services'
 import { Search } from 'lucide-vue-next'
 import { useNotify } from '@/plugins/toast-notify'
 import OrderStatus from '@/components/order-status.vue'
-import { onMounted, ref } from 'vue'
+import { TimeToNow } from '@/plugins/time-provider'
+import { ref } from 'vue'
 
 const props = defineProps<{
   id: string
@@ -47,16 +48,13 @@ const getTotal = ({ price, quantity }: { price: number; quantity: number }) => {
     (price * quantity) / 100
   )
 }
-
-onMounted(async () => {
-  await getOrder()
-})
 </script>
 
 <template>
   <Dialog>
     <DialogTrigger as-child>
       <Button
+        @click.prevent.stop="getOrder()"
         class="bg-background hover:bg-accent text-sm font-medium border border-input text-secondary-foreground hover:text-accent-foreground h-8 rounded-md px-2.5"
       >
         <Search class="w-3 h-3" />
@@ -94,7 +92,9 @@ onMounted(async () => {
             </TableRow>
             <TableRow>
               <TableCell class="text-muted-foreground">Criado há</TableCell>
-              <TableCell class="flex justify-end">{{ order?.createdAt }}</TableCell>
+              <TableCell class="flex justify-end text-muted-foreground">
+                {{ TimeToNow(order?.createdAt) }}
+              </TableCell>
             </TableRow>
           </TableBody>
         </Table>
