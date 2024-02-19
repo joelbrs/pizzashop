@@ -1,4 +1,5 @@
 export * from './user'
 export * from './order'
+export * from './metrics'
 export * from './restaurant'
 export * from './generics/pagination'
