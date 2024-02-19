@@ -64,7 +64,7 @@ const disableCancelBtn = ({ status }: Order) => {
           <TableCell class="px-6 py-3.5 text-muted-foreground w-[10vw]">
             {{ TimeToNow(order.createdAt) }}
           </TableCell>
-          <TableCell class="px-6 py-3.5 text-muted-foreground w-[7vw]">
+          <TableCell class="px-6 py-3.5 text-muted-foreground w-[10vw]">
             <OrderStatus :status="order.status" />
           </TableCell>
           <TableCell class="px-6 py-3.5 font-medium w-[45vw]">{{ order.customerName }}</TableCell>
