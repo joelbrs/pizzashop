@@ -4,9 +4,10 @@ import { Search, X, Loader2 } from 'lucide-vue-next'
 import PaginationApp from '@/components/pagination-app.vue'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
-import { PaginationModel, type Order, type Pagination}  from '@/@types'
+import { PaginationModel, type Order, type Pagination } from '@/@types'
 import { OrderApi } from '@/services'
 import OrdersTable from './orders-table.vue'
+import OrdersTableSkeleton from './orders-table-skeleton.vue'
 import SelectField from '@/components/select-field.vue'
 import { useNotify } from '@/plugins/toast-notify'
 
@@ -50,10 +51,12 @@ const pagination = ref<Pagination>(new PaginationModel())
 const orders = ref<Order[]>([])
 
 const disableCleanFilter = computed(() => {
-  return !Object.keys(filters.value).find(filter => filters.value[filter as keyof typeof filters.value])
+  return !Object.keys(filters.value).find(
+    (filter) => filters.value[filter as keyof typeof filters.value]
+  )
 })
 
-const defineHandler = ({status}: Order) => {
+const defineHandler = ({ status }: Order) => {
   const stts = {
     pending: 'approve',
     processing: 'dispatch',
@@ -61,7 +64,7 @@ const defineHandler = ({status}: Order) => {
     canceled: 'cancel'
   }
 
-  return status in stts && stts[status as keyof typeof stts] || stts.canceled
+  return (status in stts && stts[status as keyof typeof stts]) || stts.canceled
 }
 
 const getOrders = async () => {
@@ -88,28 +91,28 @@ const handleOrder = async (order: Order) => {
   const handler = defineHandler(order)
 
   const handlers = {
-    approve: async ({orderId}: Order) => {
+    approve: async ({ orderId }: Order) => {
       const { error } = await OrderApi.approveOrder(orderId)
 
       if (error) return $notify.error('Erro ao aprovar pedido!')
 
       $notify.ok('Pedido aprovado!')
     },
-    dispatch: async ({orderId}: Order) => {
+    dispatch: async ({ orderId }: Order) => {
       const { error } = await OrderApi.dispatchOrder(orderId)
 
       if (error) return $notify.error('Erro ao despachar pedido!')
 
       $notify.ok('Pedido despachado!')
     },
-    deliver: async ({orderId}: Order) => {
+    deliver: async ({ orderId }: Order) => {
       const { error } = await OrderApi.deliverOrder(orderId)
 
       if (error) return $notify.error('Erro ao entregar pedido!')
 
       $notify.ok('Pedido entregue!')
     },
-    cancel: async ({orderId}: Order) => {
+    cancel: async ({ orderId }: Order) => {
       const { error } = await OrderApi.cancelOrder(orderId)
 
       if (error) return $notify.error('Erro ao cancelar pedido!')
@@ -174,21 +177,36 @@ onMounted(async () => {
         />
       </div>
 
-      <Button type="submit" :loading="loading" :disabled="loading" class="bg-muted hover:bg-primary-foreground text-white h-8 p-2">
+      <Button
+        type="submit"
+        :loading="loading"
+        :disabled="loading"
+        class="bg-muted hover:bg-primary-foreground text-white h-8 p-2"
+      >
         <Search v-if="!loading" class="h-4 w-4 mr-2" />
         Filtrar Resultados
       </Button>
 
-      <Button @click="handleCleanFilters" :disabled="disableCleanFilter" variant="outline" class="text-white h-8 p-2">
+      <Button
+        @click="handleCleanFilters"
+        :disabled="disableCleanFilter"
+        variant="outline"
+        class="text-white h-8 p-2"
+      >
         <X class="h-4 w-4 mr-2" />
         Remover Filtros
       </Button>
     </form>
 
     <div class="w-full flex flex-col gap-2 mt-0.5">
-      <OrdersTable @handle-order="handleOrder($event)" :orders="orders" />
-      <div class="self-end w-full">
-        <PaginationApp :pagination="pagination" @handle-pagination="handlePagination($event)"/>
+      <div v-if="loading">
+        <OrdersTableSkeleton />
+      </div>
+      <div v-else>
+        <OrdersTable @handle-order="handleOrder($event)" :orders="orders" />
+        <div class="self-end w-full">
+          <PaginationApp :pagination="pagination" @handle-pagination="handlePagination($event)" />
+        </div>
       </div>
     </div>
   </div>
