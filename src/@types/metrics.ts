@@ -12,3 +12,13 @@ export interface DayAmounts {
   diffFromYesterday: number
   amount: number
 }
+
+export interface DailyReceipt {
+  date: string
+  receipt: number
+}
+
+export interface PopularProduct {
+  product: string
+  amount: number
+}

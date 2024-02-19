@@ -1,4 +1,4 @@
-import type { MonthAmounts, MonthReceipt, DayAmounts } from '@/@types'
+import type { MonthAmounts, MonthReceipt, DayAmounts, DailyReceipt, PopularProduct } from '@/@types'
 import HttpFactory from '@/factories/HttpFactory'
 
 const base = 'metrics'
@@ -18,4 +18,12 @@ export function getDayOrdersAmount() {
 
 export function getMonthCanceledOrdes() {
   return httpClient.get<MonthAmounts>('month-canceled-orders-amount')
+}
+
+export function getDailyReceipt(params: Object) {
+  return httpClient.get<DailyReceipt[]>('daily-receipt-in-period', params)
+}
+
+export function getPopularProducts() {
+  return httpClient.get<PopularProduct[]>('popular-products')
 }
