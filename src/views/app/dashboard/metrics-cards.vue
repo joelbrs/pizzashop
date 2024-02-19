@@ -122,7 +122,7 @@ onMounted(async () => {
           <span :class="setDiffField(items.dayOrders.diffFromYesterday).color">
             {{ setDiffField(items.dayOrders.diffFromYesterday).value }}
           </span>
-          em relação ao mês passado
+          em relação a ontem
         </p>
       </CardContent>
     </Card>
