@@ -23,6 +23,7 @@ import { useNotify } from '@/plugins/toast-notify'
 import OrderStatus from '@/components/order-status.vue'
 import { TimeToNow } from '@/plugins/time-provider'
 import { ref } from 'vue'
+import OrderDetailsSkeleton from './order-details-skeleton.vue'
 
 const props = defineProps<{
   id: string
@@ -65,7 +66,8 @@ const getTotal = ({ price, quantity }: { price: number; quantity: number }) => {
         <DialogTitle>Pedido: {{ order?.id }}</DialogTitle>
         <DialogDescription> Detalhes do pedido </DialogDescription>
       </DialogHeader>
-      <div class="flex flex-col gap-5">
+      <OrderDetailsSkeleton v-if="loading" />
+      <div v-else class="flex flex-col gap-5">
         <Table>
           <TableBody>
             <TableRow>

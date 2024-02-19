@@ -68,7 +68,7 @@ onMounted(async () => {
   <div class="w-full" v-if="loading">
     <MetricsCardsSkeleton />
   </div>
-  <div class="flex items-center gap-4 w-full py-2" v-else>
+  <div v-else class="flex items-center gap-4 w-full py-2">
     <Card class="rounded-md w-[25%]">
       <CardHeader class="pb-2">
         <div class="flex items-center justify-between">

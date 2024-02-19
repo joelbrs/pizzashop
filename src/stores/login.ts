@@ -13,7 +13,7 @@ export const useLoginStore = defineStore('login', {
   }),
   actions: {
     async SIGN_IN(form: { email: string }) {
-      const { error } = await LoginApi.postAuthenticate(form.email)
+      const { error } = await LoginApi.postAuthenticate(form)
 
       if (error) return $notify.error('Credenciais Inválidas!')
 
