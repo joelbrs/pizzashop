@@ -204,7 +204,7 @@ onMounted(async () => {
       </div>
       <div v-else>
         <OrdersTable @handle-order="handleOrder($event)" :orders="orders" />
-        <div class="self-end w-full">
+        <div class="self-end w-full mt-2">
           <PaginationApp :pagination="pagination" @handle-pagination="handlePagination($event)" />
         </div>
       </div>
