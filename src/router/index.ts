@@ -19,7 +19,7 @@ const router = createRouter({
           component: () => import('../views/app/orders/index-page.vue')
         }
       ],
-      component: () => import('../layouts/MainLayout.vue')
+      component: () => import('../layouts/main-layout.vue')
     },
     {
       path: '/sign-in',
