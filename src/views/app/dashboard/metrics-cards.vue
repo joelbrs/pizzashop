@@ -4,9 +4,12 @@ import { MetricsApi } from '@/services'
 import { useNotify } from '@/plugins/toast-notify'
 import { DollarSign, Utensils } from 'lucide-vue-next'
 import type { MonthAmounts, MonthReceipt, DayAmounts } from '@/@types'
+import MetricsCardsSkeleton from './metrics-cards-skeleton.vue'
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
 
 const $notify = useNotify()
+
+const loading = ref(false)
 
 const items = ref({
   receipt: {} as MonthReceipt,
@@ -55,12 +58,17 @@ const getCanceledOrders = async () => {
 }
 
 onMounted(async () => {
+  loading.value = true
   await Promise.all([getMonthReceipts(), getMonthOrders(), getDayOrders(), getCanceledOrders()])
+  loading.value = false
 })
 </script>
 
 <template>
-  <div class="flex items-center gap-4 w-full py-2">
+  <div class="w-full" v-if="loading">
+    <MetricsCardsSkeleton />
+  </div>
+  <div class="flex items-center gap-4 w-full py-2" v-else>
     <Card class="rounded-md w-[25%]">
       <CardHeader class="pb-2">
         <div class="flex items-center justify-between">
