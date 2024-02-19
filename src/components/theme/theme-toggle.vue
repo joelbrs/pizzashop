@@ -8,7 +8,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
-import { toggleTheme, verifyThemeSystem } from './theme-provider'
+import { toggleTheme, verifyThemeSystem } from '@/plugins/theme-provider'
 import { onMounted } from 'vue'
 
 onMounted(() => {

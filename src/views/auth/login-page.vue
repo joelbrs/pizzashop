@@ -6,7 +6,7 @@ import SignUpForm from './forms/sign-up-form.vue'
 import TabsField from '@/components/tabs-field.vue'
 import type { Tab } from '@/components/tabs-field.vue'
 import { useLoginStore } from '@/stores/login'
-import { verifyThemeSystem } from '@/components/theme/theme-provider'
+import { verifyThemeSystem } from '@/plugins/theme-provider'
 
 const $loginStore = useLoginStore()
 
@@ -101,3 +101,4 @@ onMounted(() => {
     </div>
   </div>
 </template>
+@/plugins/theme-provider
