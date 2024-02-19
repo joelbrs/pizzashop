@@ -1,17 +1,15 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue'
-import { LoginApi, RestaurantApi } from '@/services'
 import { Pizza } from 'lucide-vue-next'
-import { useNotify } from '@/plugins/toast-notify'
 import SignInForm from './forms/sign-in-form.vue'
 import SignUpForm from './forms/sign-up-form.vue'
 import TabsField from '@/components/tabs-field.vue'
 import type { Tab } from '@/components/tabs-field.vue'
+import { useLoginStore } from '@/stores/login'
 
-const $notify = useNotify()
+const $loginStore = useLoginStore()
 
 const loading = ref(false)
-
 const tab = ref('sign-in')
 
 const signInForm = ref({
@@ -42,22 +40,15 @@ const tabs: Tab[] = [
 
 const signIn = async () => {
   loading.value = true
-  const { error } = await LoginApi.postAuthenticate(signInForm.value)
+  await $loginStore.SIGN_IN(signInForm.value)
   loading.value = false
-
-  if (error) return $notify.error('Credenciais Inválidas!')
-
-  $notify.ok('Enviamos um link de autenticação para seu e-mail.')
 }
 
 const signUp = async () => {
   loading.value = true
-  const { error } = await RestaurantApi.createRestaurant(signUpForm.value)
+  await $loginStore.SIGN_UP(signUpForm.value)
   loading.value = false
 
-  if (error) return $notify.error('Credenciais Inválidas!')
-
-  $notify.ok()
   tab.value = 'sign-in'
 }
 

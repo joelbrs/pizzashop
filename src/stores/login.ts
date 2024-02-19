@@ -1,5 +1,5 @@
-import type { RestaurantDTOOut, UserDTOOut } from '@/@types'
-import { LoginApi, UserApi } from '@/services'
+import type { RestaurantDTOOut, UserDTOOut, RestaurantDTOIn } from '@/@types'
+import { LoginApi, RestaurantApi, UserApi } from '@/services'
 import { useNotify } from '@/plugins/toast-notify'
 import { defineStore } from 'pinia'
 
@@ -12,6 +12,20 @@ export const useLoginStore = defineStore('login', {
     restaurant: {} as RestaurantDTOOut
   }),
   actions: {
+    async SIGN_IN(form: { email: string }) {
+      const { error } = await LoginApi.postAuthenticate(form.email)
+
+      if (error) return $notify.error('Credenciais Inválidas!')
+
+      $notify.ok('Enviamos um link de autenticação para seu e-mail.')
+    },
+    async SIGN_UP(form: RestaurantDTOIn) {
+      const { error } = await RestaurantApi.createRestaurant(form)
+
+      if (error) return $notify.error('Credenciais Inválidas!')
+
+      $notify.ok()
+    },
     async SET_LOGGED_USER() {
       await Promise.all([this.GET_USER(), this.GET_RESTAURANT()])
       this.isLogged = true
@@ -28,8 +42,8 @@ export const useLoginStore = defineStore('login', {
       if (error) return $notify.error('Erro ao consultar restaurante.')
       this.restaurant = data
     },
-    async EDIT_PROFILE(restaurant: { name: string, description: string }) {
-      const {error} = await UserApi.putRestaurantInfos(restaurant)
+    async EDIT_PROFILE(restaurant: { name: string; description: string }) {
+      const { error } = await UserApi.putRestaurantInfos(restaurant)
 
       if (error) return $notify.error('Erro ao atualizar informações do restaurante.')
 
