@@ -67,14 +67,14 @@ const defineHandler = ({ status }: Order) => {
   return (status in stts && stts[status as keyof typeof stts]) || stts.canceled
 }
 
-const getOrders = async () => {
+const getOrders = async (page?: Pagination) => {
   const { customerName, orderId, status } = filters.value
 
   const params = {
     status: status && status !== 'all' ? status : null,
     orderId: orderId || null,
     customerName: customerName || null,
-    pageIndex: pagination.value.pageIndex
+    pageIndex: page?.pageIndex || 0
   }
 
   loading.value = true
@@ -130,7 +130,7 @@ const handleOrder = async (order: Order) => {
 const handlePagination = async ($event: number) => {
   pagination.value.pageIndex = $event
 
-  await getOrders()
+  await getOrders(pagination.value)
 }
 
 const handleCleanFilters = async () => {
@@ -154,7 +154,7 @@ onMounted(async () => {
       <h1 class="text-3xl font-bold tracking-tight">Pedidos</h1>
       <Loader2 v-if="loading" class="w-5 h-5 animate-spin" />
     </div>
-    <form @submit.prevent.stop="getOrders" class="flex items-center gap-2 mt-2">
+    <form @submit.prevent.stop="getOrders()" class="flex items-center gap-2 mt-2">
       <span class="text-sm font-semibold">Filtros:</span>
       <Input
         v-model:model-value="filters.orderId"
