@@ -22,7 +22,7 @@ const handleStatusLabel = ({ status }: Order) => {
   const labels = {
     pending: 'Aprovar',
     processing: 'Em entrega',
-    delivered: 'Entregue'
+    delivering: 'Entregue'
   }
 
   if (status in labels) {
