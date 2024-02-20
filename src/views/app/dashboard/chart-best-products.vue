@@ -16,7 +16,6 @@ const config = ref<ChartConfiguration>({
   data: {
     datasets: [
       {
-        label: 'Monthly Receipts',
         data: [],
         hoverOffset: 10,
         backgroundColor: ['#f59e0b', '#0ea5e9', '#f43f5e', '#10b981', '#8b5cf6'],
@@ -39,7 +38,9 @@ const createChart = () => {
 }
 
 const getProducts = async () => {
+  loading.value = true
   const { data, error } = await MetricsApi.getPopularProducts()
+  loading.value = false
 
   if (error) return $notify.error('Erro ao carregar os dados dos melhores produtos.')
 
